@@ -3,10 +3,17 @@ import "../styles/Weather.css";
 
 const Weather = () => {
   const API_Key = "234769aa7f9b12b2f7087085021ea303";
-  const [current, setCurrent] = useState("Ho Chi Minh");
+  const [current, setCurrent] = useState(
+    localStorage.getItem("current_search") || "Ho Chi Minh"
+  );
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
-
+  // const [numberofdaystoforecast, setdays] = useState(0);
+  useEffect(() => {
+    if (current) {
+      localStorage.setItem("current_search", current);
+    }
+  }, [current]);
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -24,7 +31,10 @@ const Weather = () => {
         setWeather(data);
         const dailyForecast = forecastResult.list.slice(1);
         setForecast(dailyForecast);
-        // console.log("Forecast:", forecastResult.list.slice(1));
+        // console.log(
+        //   "Forecast accpording to the number of days:",
+        //   forecastResult.list.slice(1)
+        // );
         console.log("forcast state ", dailyForecast);
       } catch (error) {
         console.error("Error fetching weather data:", error);
@@ -53,7 +63,15 @@ const Weather = () => {
           </select>
         </div>
       </section>
+      {/* <section>
+        <input
 
+          type="text"
+          value={numberofdaystoforecast}
+          onChange={(e) => setdays(e.target.value)}
+        />
+        <button onClick={handle_days}>Get Weather</button>
+      </section> */}
       <section className="weather-info">
         {weather ? (
           <>
